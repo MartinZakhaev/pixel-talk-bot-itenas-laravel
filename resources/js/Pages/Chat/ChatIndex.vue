@@ -2,6 +2,7 @@
 import { ref, onMounted, computed } from "vue";
 import { Head } from "@inertiajs/vue3";
 import ChatLayout from "@/Layouts/ChatLayout.vue";
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { useForm, Link } from "@inertiajs/vue3";
 import ChatContent from "@/Components/ChatContent.vue";
 import Skeleton from "@/Components/Skeleton.vue";
@@ -46,12 +47,12 @@ const title = computed(() => props.chat?.context[0].content ?? "New Chat");
 </script>
 <template>
     <Head :title="title" />
-    <ChatLayout>
+    <AuthenticatedLayout>
         <template #aside>
             <ul class="p-2">
                 <li
                     v-if="chat"
-                    class="px-4 py-2 my-2 flex justify-between font-semibold text-green-400 bg-slate-900 hover:bg-slate-700 rounded-lg duration-200"
+                    class="px-4 py-2 my-2 flex justify-between items-center font-semibold text-blue-400 bg-blue-50 hover:bg-blue-100 hover:text-blue-600 rounded-lg duration-200"
                 >
                     <Link href="/chat" class="w-full">New Chat</Link>
                     <svg
@@ -73,9 +74,9 @@ const title = computed(() => props.chat?.context[0].content ?? "New Chat");
                     <li
                         :class="[
                             message.id === chat?.id
-                                ? 'bg-slate-700'
-                                : 'bg-slate-900',
-                            'px-4 py-2 my-2 flex justify-between font-semibold text-slate-400 hover:bg-slate-700 rounded-lg duration-200',
+                                ? 'bg-blue-100 text-blue-600'
+                                : 'bg-blue-50',
+                            'px-4 py-2 my-2 flex justify-between items-center font-semibold text-blue-400 hover:bg-blue-100 hover:text-blue-600 rounded-lg duration-200',
                         ]"
                     >
                         <Link :href="`/chat/${message.id}`">{{
@@ -92,7 +93,7 @@ const title = computed(() => props.chat?.context[0].content ?? "New Chat");
                                     viewBox="0 0 24 24"
                                     stroke-width="1.5"
                                     stroke="currentColor"
-                                    class="w-6 h-6 text-red-300"
+                                    class="w-6 h-6 text-red-300 hover:text-red-500"
                                 >
                                     <path
                                         stroke-linecap="round"
@@ -152,7 +153,7 @@ const title = computed(() => props.chat?.context[0].content ?? "New Chat");
                 </template>
             </ul>
         </template>
-        <div class="w-full flex text-white">
+        <div class="w-full flex text-white" id="main-chat">
             <template v-if="chat">
                 <div class="w-full flex h-screen bg-slate-900">
                     <div class="w-full overflow-auto pb-36" ref="chatContainer">
@@ -173,8 +174,8 @@ const title = computed(() => props.chat?.context[0].content ?? "New Chat");
                     <div class="relative flex-1 flex items-center">
                         <input
                             type="text"
-                            class="w-full bg-slate-700 text-white rounded-lg"
-                            placeholder="Ask Laravel AI"
+                            class="w-full bg-white text-slate-900 rounded-lg"
+                            placeholder="Ask Itenas Pixel Talk Bot"
                             v-model="form.promt"
                             @keyup.enter="submit"
                             :disabled="form.processing"
@@ -190,7 +191,7 @@ const title = computed(() => props.chat?.context[0].content ?? "New Chat");
                                 viewBox="0 0 24 24"
                                 stroke-width="1.5"
                                 stroke="currentColor"
-                                class="w-6 h-6 -ml-8 text-slate-200"
+                                class="w-6 h-6 -ml-8 text-slate-900"
                             >
                                 <path
                                     stroke-linecap="round"
@@ -207,9 +208,33 @@ const title = computed(() => props.chat?.context[0].content ?? "New Chat");
                 </div>
             </section>
         </template>
-    </ChatLayout>
+    </AuthenticatedLayout>
 </template>
 <style>
+#main-chat::-webkit-scrollbar {
+    width: 0;
+    transition: width 0.2s;
+}
+
+#main-chat:hover::-webkit-scrollbar {
+    width: 0.4vw;
+}
+
+#main-chat::-webkit-scrollbar-thumb {
+    background-color: #7248dc;
+    border-radius: 100vw;
+}
+
+#main-chat::-webkit-scrollbar-track {
+    background: linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.2),
+        rgba(0, 0, 0, 0.2),
+        var(--primary-color)
+    );
+    border-radius: 100vw;
+}
+
 .dot-typing {
     position: relative;
     left: -9999px;
